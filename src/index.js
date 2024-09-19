@@ -6,6 +6,8 @@ import AppRouter from './AppRouter';
 import TeacherDash from './components/teachers/TeacherDash';
 import WebcamCapture from './components/Webcam/WebcamCapture';
 import App from './components/Webcam/App';
+import ParentDash from './components/parents/Navbar';
+import Main from './components/parents/Main';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -13,6 +15,7 @@ root.render(
     <AppRouter />
     {/* <WebcamCapture/> */}
     {/* <App/> */}
+    {/* <Main/> */}
     
   </React.StrictMode>
 );

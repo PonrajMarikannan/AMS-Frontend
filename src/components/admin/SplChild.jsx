@@ -20,7 +20,6 @@ const SplChild = () => {
         const response = await axios.get('http://localhost:8888/child/getDef/all');
         setDeficiencies(response.data);
 
-        // Load already suggested deficiencies from localStorage
         const storedDeficiencies = JSON.parse(localStorage.getItem('disabledDeficiencies')) || [];
         setDisabledDeficiencies(new Set(storedDeficiencies));
       } catch (error) {
@@ -93,15 +92,15 @@ const SplChild = () => {
           confirmButtonText: 'OK'
         });
       } finally {
-        setLoading(false); // Stop loading
-        setSelectedDeficiency(null); // Clear selection
+        setLoading(false); 
+        setSelectedDeficiency(null); 
       }
     }
   };
 
   return (
     <div className="max-w-6xl mx-auto p-8 bg-green-100 rounded-lg shadow-lg mt-40 relative mr-8">
-      <h1 className="text-3xl font-bold mb-6 text-center">Child Records</h1>
+      <h1 role="heading" className="text-3xl font-bold mb-6 text-center">Child Records</h1>
       <div className="overflow-x-auto">
         <div className="flex space-x-6 overflow-x-auto">
           {deficiencies.map(def => (
@@ -167,7 +166,7 @@ const SplChild = () => {
               <p><strong>Date of Birth:</strong> {selectedDeficiency.dateOfBirth}</p>
               <p><strong>Gender:</strong> {selectedDeficiency.gender}</p>
               <p><strong>Deficiency:</strong> {selectedDeficiency.deficiency}</p>
-              <p><strong>Preferred Foods:</strong> {preferedFood || 'Loading...'}</p>
+              <p><strong>Preferred Foods:</strong> {preferedFood}</p>
             </div>
           )}
           <div className="mt-6 flex justify-between">
@@ -189,7 +188,6 @@ const SplChild = () => {
         </div>
       </Modal>
 
-      {/* Loader component */}
       {loading && (
         <div className="fixed inset-0 flex justify-center items-center bg-gray-500 bg-opacity-50">
           <div className="border-t-4 border-blue-500 border-solid w-16 h-16 rounded-full animate-spin"></div>

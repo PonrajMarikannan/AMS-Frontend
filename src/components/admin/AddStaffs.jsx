@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { FaUser, FaEnvelope } from 'react-icons/fa';
+import Swal from 'sweetalert2';
+import { TailSpin } from 'react-loader-spinner'; 
+import { useNavigate, Link } from 'react-router-dom';
 
 const generateRandomPassword = (length = 12) => {
   const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+";
@@ -13,6 +15,10 @@ const generateRandomPassword = (length = 12) => {
 };
 
 const AddTeacherForm = () => {
+
+  const navigate = useNavigate();
+
+
   const [teacherData, setTeacherData] = useState({
     username: '',
     email: '',
@@ -21,6 +27,7 @@ const AddTeacherForm = () => {
   });
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -34,14 +41,13 @@ const AddTeacherForm = () => {
     e.preventDefault();
     const generatedPassword = generateRandomPassword();
 
+    setLoading(true);
     try {
-      // Prepare data to send
       const dataToSend = {
         ...teacherData,
         password: generatedPassword
       };
 
-      // Uncomment and configure mail notification if needed
       const mailResponse = await axios.post('http://localhost:8888/staff/mail', {
         email: teacherData.email,
         password: generatedPassword
@@ -52,6 +58,13 @@ const AddTeacherForm = () => {
         if (registerResponse.data === "Success") {
           setSuccess('Teacher added successfully');
           setError('');
+          Swal.fire({
+            title: 'Success!',
+            text: 'Teacher added and email sent successfully.',
+            icon: 'success',
+            confirmButtonText: 'Okay'
+          });
+          navigate('/dashboard');
         } else {
           setError('Registration failed. Please try again later.');
           setSuccess('');
@@ -63,6 +76,8 @@ const AddTeacherForm = () => {
       console.error('There was an error!', err);
       setError('Failed to register. Please try again later.');
       setSuccess('');
+    } finally {
+      setLoading(false); 
     }
   };
 
@@ -70,12 +85,12 @@ const AddTeacherForm = () => {
     <div className="flex max-w-5xl mx-auto p-8 bg-gray-50 rounded-xl shadow-md mt-32 mr-28">
       {/* Form Section */}
       <div className="w-full lg:w-1/2 pr-6">
-        <h2 className="text-2xl font-bold mb-6 ml-28 text-gray-900">ADD TEACHER</h2>
+        <h2 role="heading" className="text-2xl font-bold mb-6 ml-28 text-gray-900">ADD TEACHER</h2>
         {error && <p className="text-red-500 mb-4">{error}</p>}
         {success && <p className="text-green-500 mb-4">{success}</p>}
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="relative">
-            <label htmlFor="username" className="block text-sm font-medium text-blue-700 mb-1">Teacher's Name</label>
+            <label htmlFor="username" role="teachername" className="block text-sm font-medium text-blue-700 mb-1">Teacher's Name</label>
             <div className="flex items-center border border-gray-300 rounded-md shadow-sm focus-within:border-indigo-500 focus-within:ring-1 focus-within:ring-indigo-500">
               <input
                 type="text"
@@ -91,7 +106,7 @@ const AddTeacherForm = () => {
           </div>
 
           <div className="relative">
-            <label htmlFor="email" className="block text-sm font-medium text-blue-700 mb-1">Email Address</label>
+            <label htmlFor="email" role="email" className="block text-sm font-medium text-blue-700 mb-1">Email Address</label>
             <div className="flex items-center border border-gray-300 rounded-md shadow-sm focus-within:border-indigo-500 focus-within:ring-1 focus-within:ring-indigo-500">
               <input
                 type="email"
@@ -107,7 +122,7 @@ const AddTeacherForm = () => {
           </div>
 
           <div className="relative">
-            <label htmlFor="role" className="block text-sm font-medium text-blue-700 mb-1">Role</label>
+            <label role="type" htmlFor="role" className="block text-sm font-medium text-blue-700 mb-1">Role</label>
             <select
               id="role"
               name="role"
@@ -118,11 +133,11 @@ const AddTeacherForm = () => {
             >
               <option value="" disabled>Select Role</option>
               <option value="teacher">Teacher</option>
-              <option value="helper">Helper</option>
+              {/* <option value="helper">Helper</option> */}
             </select>
           </div>
 
-          <button
+          <button role="btn"
             type="submit"
             className="w-full bg-indigo-600 text-white py-3 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition duration-150"
           >
@@ -133,8 +148,15 @@ const AddTeacherForm = () => {
 
       {/* Image Section */}
       <div className="hidden lg:block lg:w-3/4 xl:w-3/4 pl-6">
-  <img src="https://www.parent.app/hubfs/Imported_Blog_Media/hiring-the-best-educators-for-your-daycare-1024x465-1.png" alt="Add Teacher" className="w-full h-full object-cover rounded-lg shadow-md" />
-</div>
+        <img src="https://www.parent.app/hubfs/Imported_Blog_Media/hiring-the-best-educators-for-your-daycare-1024x465-1.png" alt="Add Teacher" className="w-full h-full object-cover rounded-lg shadow-md" />
+      </div>
+
+      {/* Loader Modal */}
+      {loading && (
+        <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50">
+          <TailSpin color="#ffffff" height={80} width={80} />
+        </div>
+      )}
     </div>
   );
 };

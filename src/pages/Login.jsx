@@ -25,8 +25,7 @@ const Login = () => {
       });
 
       console.log(response.data);
-      // const status = response.data.status;
-      // const role = response.data.role;
+      
       const {id, status, role } = response.data;
 
       // sessionStorage.setItem("Email", data.email);
@@ -35,17 +34,17 @@ const Login = () => {
       if (status === 'Success') {
         switch (role) {
           case 'Admin':
-            navigate('/admindash');
+            navigate('/dashboard');
             break;
           case 'Parent':
-            navigate('/parentdash');
+            navigate('/Main');
             break;
           case 'Teacher':
             navigate('/teacherdash');
             break;
-          case 'helper':
-            navigate('/helperdash');
-            break;
+          // case 'helper':
+          //   navigate('/helperdash');
+          //   break;
           default:
             setError('Unknown user role');
         }

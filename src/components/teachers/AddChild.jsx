@@ -7,7 +7,7 @@ import { useNavigate, Link } from 'react-router-dom';
 const isValidDateOfBirth = (dateOfBirth) => {
   const today = new Date();
   const dob = new Date(dateOfBirth);
-  let age = today.getFullYear() - dob.getFullYear(); // `age` is `let`, so it can be modified
+  let age = today.getFullYear() - dob.getFullYear(); 
   const month = today.getMonth() - dob.getMonth();
 
   if (month < 0 || (month === 0 && today.getDate() < dob.getDate())) {
@@ -79,8 +79,8 @@ const AddChild = () => {
 
     if (type === 'file') {
       const file = files[0];
-      const validImageTypes = ['image/jpeg', 'image/png', 'image/gif'];
-      const validFileTypes = ['image/jpeg', 'image/png', 'image/gif', 'application/pdf'];
+      const validImageTypes = ['image/jpeg', 'image/png'];
+      const validFileTypes = ['image/jpeg', 'image/png', 'application/pdf'];
 
       if (field === 'photo' || field === 'birthCertificate') {
         if (file) {
@@ -187,8 +187,8 @@ const AddChild = () => {
     } else if (step === 2) {
       if (validateParentDetails()) {
         setError('');
-        // Handle submit on the last step
-        handleSubmit(); // Call handleSubmit here to validate and submit the form
+       
+        handleSubmit(); 
       }
     }
   };
@@ -198,20 +198,18 @@ const AddChild = () => {
   };
 
   const handleSubmit = async (e) => {
-    if (e) e.preventDefault(); // Prevent form submission if it's triggered by a submit button
+    if (e) e.preventDefault(); 
 
-    // Validate all steps before submitting
     if (validateChildDetails() && validateHealthDetails() && validateParentDetails()) {
       setLoading(true);
       try {
-        // Step 1: Send email
         const mailResponse = await axios.post('http://localhost:8888/parent/admission', {
           email: formData.parent.email,
           password: formData.parent.password
         });
         setLoading(false); 
         if (mailResponse.data === "MailSend") {
-          Swal.fire('Success', 'Form submitted successfully!', 'success');
+          Swal.fire('Success', 'Admission Success', 'success');
           const parentData = new FormData();
           parentData.append('name', formData.parent.name);
           parentData.append('phnum', formData.parent.phnum);
@@ -539,8 +537,17 @@ const AddChild = () => {
           )}
         </div>
       </form>
+      {loading && (
+        <div className="fixed inset-0 flex justify-center items-center bg-gray-500 bg-opacity-50">
+          <div className="border-t-4 border-blue-500 border-solid w-16 h-16 rounded-full animate-spin"></div>
+        </div>
+      )}
     </div>
   );
 };
 
 export default AddChild;
+
+
+
+

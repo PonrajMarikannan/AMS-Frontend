@@ -96,11 +96,11 @@ function LeaveRequestList() {
 
   return (
     <div className="max-w-6xl mx-auto p-6 border border-gray-200 rounded-lg bg-white shadow-md mr-12 mt-28">
-      <h1 className="text-2xl font-semibold text-gray-800 mb-6 text-center">Leave Requests</h1>
+      <h1  className="text-2xl font-semibold text-gray-800 mb-6 text-center">Leave Requests</h1>
       
       {/* Filter Buttons */}
       <div className="mb-4 flex justify-center space-x-4">
-        <button
+        <button role="btn"
           onClick={() => setStatusFilter('')}
           className={`px-4 py-2 rounded-lg ${statusFilter === '' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'} hover:bg-blue-600`}
         >
@@ -130,7 +130,7 @@ function LeaveRequestList() {
       <table className="w-full border-collapse bg-gray-50">
         <thead className="bg-blue-600 text-white">
           <tr>
-            <th className="p-4 border-b">Name</th>
+            <th role="name" className="p-4 border-b">Name</th>
             <th className="p-4 border-b">Role</th>
             <th className="p-4 border-b">Leave Type</th>
             <th className="p-4 border-b">Start Date</th>

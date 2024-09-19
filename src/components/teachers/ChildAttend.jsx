@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import ChildCard from './ChildCard';
+import { useNavigate } from 'react-router-dom';
+
 
 const AttendanceTable = () => {
   const [attendanceData, setAttendanceData] = useState([]);
   const [markedAttendance, setMarkedAttendance] = useState(new Map()); 
   const [error, setError] = useState('');
   const [currentSlide, setCurrentSlide] = useState(0);
+  const navigate = useNavigate();
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -14,19 +18,15 @@ const AttendanceTable = () => {
         const response = await axios.get('http://localhost:8888/child/all');
         setAttendanceData(response.data);
         // localStorage.clear();
-        // Get today's date in YYYY-MM-DD format
         const today = new Date();
         const formattedToday = today.toISOString().split('T')[0];
 
-        // Check if the date has changed
         const storedDate = localStorage.getItem('currentDate');
         if (storedDate !== formattedToday) {
-          // If the date has changed, clear the localStorage and update the stored date
           localStorage.clear();
           localStorage.setItem('currentDate', formattedToday);
         }
 
-        // Retrieve marked attendance for the current date
         const storedMarkedAttendance = JSON.parse(localStorage.getItem('markedAttendance')) || [];
         const attendanceMap = new Map(storedMarkedAttendance.map(({ childId, status }) => [childId, status]));
         setMarkedAttendance(attendanceMap);
@@ -76,17 +76,23 @@ const AttendanceTable = () => {
     setCurrentSlide((prev) => Math.max(prev - 1, 0));
   };
 
+  const handleHistory = () => {
+    navigate("/attendancehistory");
+  }
+
   const currentDate = new Date().toLocaleDateString();
 
   return (
-    <div className="max-w-6xl mx-auto p-8 bg-green-100 rounded-lg shadow-lg mt-32 mr-12 relative">
+    <div className="max-w-6xl mx-auto p-8 bg-green-100 rounded-lg shadow-lg mt-24 mr-12 relative">
       {error && <p className="text-red-600 mb-4">{error}</p>}
 
       <div className="flex flex-col items-center mb-6">
         <h2 className="text-3xl font-bold mb-2">Attendance Records</h2>
         <p className="text-lg text-gray-700 mb-4">Date: {currentDate}</p>
+        <button onClick={handleHistory} className="px-4 py-2 bg-blue-500 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
+        >History</button>
       </div>
-
+     
       <div className="relative overflow-hidden">
         <div
           className="flex transition-transform duration-500 ease-in-out"

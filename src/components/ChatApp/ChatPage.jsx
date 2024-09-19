@@ -1,18 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const staticMessages = {
-  // Mock messages data for local testing, this will be replaced with real data from backend
-  1: [
-    { sender: 'parent', name: 'Jane Doe', photo: '', text: 'Hello, I have a question about my child.', time: '10:00 AM' },
-    { sender: 'teacher', name: 'Teacher Name', photo: '', text: 'Hi Jane, how can I help you?', time: '10:05 AM' },
-  ],
-  2: [
-    { sender: 'parent', name: 'John Smith', photo: '', text: 'When is the next parent-teacher meeting?', time: '11:00 AM' },
-    { sender: 'teacher', name: 'Teacher Name', photo: '', text: 'It’s scheduled for next Thursday.', time: '11:10 AM' },
-  ],
-};
-
 function ChatPage() {
     const [messages, setMessages] = useState([]);
     const [message, setMessage] = useState('');
@@ -79,26 +67,29 @@ function ChatPage() {
     };
 
     return (
-        <div className="flex max-w-6xl mx-auto p-4 bg-gray-50 rounded-xl shadow-md mt-20 mr-12 h-[620px]">
-            
-            <div className="w-1/3 bg-gray-100 p-4 border-r border-gray-300">
+        <div className="flex max-w-6xl mx-auto p-4 bg-gray-50 rounded-xl shadow-md mt-12 mr-16 h-[620px]">
+
+            {/* Parent List */}
+            <div className="w-1/3 bg-gray-100 p-4 border-r border-gray-300 flex flex-col">
                 <h2 className="text-xl font-semibold mb-4">Parents</h2>
-                <ul className="space-y-2">
-                    {parents.map(parent => (
-                        <li
-                            key={parent.id}
-                            className={`p-2 rounded cursor-pointer hover:bg-gray-200 ${currentParent?.id === parent.id ? 'bg-gray-300' : ''}`}
-                            onClick={() => setCurrentParent(parent)}
-                        >
-                            <img
-                                src={`data:image/jpeg;base64,${parent.photo}`} 
-                                alt={parent.name}
-                                className="w-10 h-10 rounded-full object-cover mr-2 inline"
-                            />
-                            {parent.name}
-                        </li>
-                    ))}
-                </ul>
+                <div className="flex-1 overflow-y-auto">
+                    <ul className="space-y-2">
+                        {parents.map(parent => (
+                            <li
+                                key={parent.id}
+                                className={`p-2 rounded cursor-pointer hover:bg-gray-200 ${currentParent?.id === parent.id ? 'bg-gray-300' : ''}`}
+                                onClick={() => setCurrentParent(parent)}
+                            >
+                                <img
+                                    src={`data:image/jpeg;base64,${parent.photo}`} 
+                                    alt={parent.name}
+                                    className="w-10 h-10 rounded-full object-cover mr-2 inline"
+                                />
+                                {parent.name}
+                            </li>
+                        ))}
+                    </ul>
+                </div>
             </div>
 
             {/* Chat Area */}
@@ -113,42 +104,44 @@ function ChatPage() {
                             />
                             <h2 className="text-2xl font-semibold">{currentParent.name}</h2>
                         </div>
-                        <div className="flex-1 bg-white p-4 border border-gray-300 rounded-lg overflow-y-auto">
-                            {messages.length > 0 ? (
-                                messages.map((msg, index) => (
-                                    <div key={index} className={`mb-2 p-2 rounded-lg flex items-start ${msg.sender === 'teacher' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800'}`}>
-                                        <img
-                                            src="https://cdn.pixabay.com/photo/2020/07/01/12/58/icon-5359554_1280.png"
-                                            alt={msg.name}
-                                            className="w-8 h-8 rounded-full object-cover mr-2"
-                                        />
-                                        <div>
-                                            <div className="flex items-center mb-1">
-                                                <span className="font-semibold">{msg.name}</span>
-                                                <span className="text-gray-500 text-sm ml-2">{msg.time}</span>
+                        <div className="flex-1 bg-white p-4 border border-gray-300 rounded-lg flex flex-col">
+                            <div className="flex-1 overflow-y-auto mb-4" style={{ maxHeight: '400px' }}>
+                                {messages.length > 0 ? (
+                                    messages.map((msg, index) => (
+                                        <div key={index} className={`mb-2 p-2 rounded-lg flex items-start ${msg.sender === 'teacher' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800'}`}>
+                                            <img
+                                                src="https://cdn.pixabay.com/photo/2020/07/01/12/58/icon-5359554_1280.png"
+                                                alt={msg.name}
+                                                className="w-8 h-8 rounded-full object-cover mr-2"
+                                            />
+                                            <div>
+                                                <div className="flex items-center mb-1 ">
+                                                    <span className="font-semibold">{msg.name}</span>
+                                                <p>{msg.messageBody}</p>
+                                                    <span className="text-gray-500 text-sm ml-2">{msg.time}</span>
+                                                </div>
                                             </div>
-                                            <p>{msg.messageBody}</p>
                                         </div>
-                                    </div>
-                                ))
-                            ) : (
-                                <p className="text-gray-500">No messages yet.</p>
-                            )}
-                        </div>
-                        <div className="mt-4 flex items-center">
-                            <input
-                                type="text"
-                                value={message}
-                                onChange={e => setMessage(e.target.value)}
-                                className="flex-1 border border-gray-300 p-2 rounded-l-lg"
-                                placeholder="Type your message here..."
-                            />
-                            <button
-                                onClick={handleSend}
-                                className="bg-blue-500 text-white p-2 rounded-r-lg ml-2"
-                            >
-                                Send
-                            </button>
+                                    ))
+                                ) : (
+                                    <p className="text-gray-500">No messages yet.</p>
+                                )}
+                            </div>
+                            <div className="flex items-center">
+                                <input
+                                    type="text"
+                                    value={message}
+                                    onChange={e => setMessage(e.target.value)}
+                                    className="flex-1 border border-gray-300 p-2 rounded-l-lg"
+                                    placeholder="Type your message here..."
+                                />
+                                <button
+                                    onClick={handleSend}
+                                    className="bg-blue-500 text-white p-2 rounded-r-lg ml-2"
+                                >
+                                    Send
+                                </button>
+                            </div>
                         </div>
                     </>
                 ) : (

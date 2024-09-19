@@ -10,7 +10,7 @@ const PasswordChangePage = () => {
   const onSubmit = async (data) => {
     setIsSubmitting(true);
 
-    const staffId = sessionStorage.getItem('UserId'); // Assuming UserId is the staffId
+    const staffId = sessionStorage.getItem('UserId');
     const { currentPassword, newPassword } = data;
 
     try {
@@ -32,8 +32,7 @@ const PasswordChangePage = () => {
           text: 'Password changed successfully!',
           confirmButtonText: 'OK'
         }).then(() => {
-          // Optionally redirect or perform another action
-          window.history.back(); // Navigate back or handle accordingly
+          window.history.back(); 
         });
       } else if (response.data === "Password Does not Match!") {
         Swal.fire({
